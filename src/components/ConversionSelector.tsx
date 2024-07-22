@@ -1,23 +1,35 @@
 "use client";
 
-import { supportedConversions } from "@/constants/SupportedConversions";
+import { SupportedConversions, supportedConversions } from "@/constants/SupportedConversions";
 import { DARK_MODE_COLORS, LIGHT_MODE_COLORS, useColorModeCtx } from "@/providers/Theme";
-import { Box, ClickAwayListener, Fade, Popper, Stack, useTheme } from "@mui/material";
+import { Box, ClickAwayListener, Fade, Popper, Stack, Typography } from "@mui/material";
 import { RiSearchLine } from "@remixicon/react";
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import CustomChip from "./CustomChip";
 
 const INPUT_WIDTH = "600px";
 
-const ConversionSelector = () => {
+interface IProps {
+  handleSelectConversion: (conversion: SupportedConversions) => void;
+  selectedConversion: SupportedConversions | null;
+}
+
+const ConversionSelector = ({ handleSelectConversion, selectedConversion }: IProps) => {
   // states
   const [openSuggestions, setOpenSuggestions] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [chips, setChips] = useState<SupportedConversions[]>([]);
+  const [searchVal, setSearchVal] = useState<SupportedConversions>("");
 
   // hooks
-  const theme = useTheme();
   const { userColorMode } = useColorModeCtx();
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  // consts
+  const filteredChips = useMemo(
+    () => chips.filter((chip) => chip.toLowerCase().indexOf(searchVal.toLowerCase()) > -1),
+    [searchVal, chips]
+  );
 
   // methods
   function handleClick(event: React.MouseEvent<HTMLElement>) {
@@ -29,6 +41,19 @@ const ConversionSelector = () => {
     setAnchorEl(null);
     setOpenSuggestions(false);
   }
+
+  // effects
+  useEffect(() => {
+    setChips(supportedConversions);
+  }, []);
+
+  useEffect(() => {
+    if (selectedConversion === null) return;
+    setSearchVal(selectedConversion);
+    handleCloseSuggestions();
+  }, [selectedConversion]);
+
+  console.log({ searchVal, filteredChips });
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="center">
@@ -48,6 +73,8 @@ const ConversionSelector = () => {
         >
           <RiSearchLine size={20} style={{ flexShrink: 0 }} />
           <input
+            onChange={(e) => setSearchVal(e.target.value)}
+            value={searchVal}
             style={{
               flex: 1,
               backgroundColor: "transparent",
@@ -89,9 +116,13 @@ const ConversionSelector = () => {
                     gap="1rem"
                     flexWrap="wrap"
                   >
-                    {supportedConversions.map((item, i) => (
-                      <CustomChip key={i + item} label={item} />
-                    ))}
+                    {filteredChips.length <= 0 ? (
+                      <Typography>Not available</Typography>
+                    ) : (
+                      filteredChips.map((item, i) => (
+                        <CustomChip key={i + item} label={item} handleSelectConversion={handleSelectConversion} />
+                      ))
+                    )}
                   </Stack>
                 </Box>
               </Fade>

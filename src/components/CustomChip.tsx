@@ -1,11 +1,13 @@
+import { SupportedConversions } from "@/constants/SupportedConversions";
 import { DARK_MODE_COLORS, LIGHT_MODE_COLORS, useColorModeCtx } from "@/providers/Theme";
 import { Box } from "@mui/material";
 
 interface IProps {
   label: string;
+  handleSelectConversion: (conversion: SupportedConversions) => void;
 }
 
-const CustomChip = ({ label }: IProps) => {
+const CustomChip = ({ label, handleSelectConversion }: IProps) => {
   // hooks
   const { userColorMode } = useColorModeCtx();
 
@@ -14,11 +16,15 @@ const CustomChip = ({ label }: IProps) => {
       sx={{
         backgroundColor: userColorMode === "dark" ? DARK_MODE_COLORS.primary : LIGHT_MODE_COLORS.primary,
         padding: "0.2rem 0.6rem",
-        // outline: `1px solid ${userColorMode === "dark" ? DARK_MODE_COLORS.accent : LIGHT_MODE_COLORS.accent}`,
         whiteSpace: "nowrap",
         borderRadius: "10px",
         color: userColorMode === "dark" ? DARK_MODE_COLORS.accent : LIGHT_MODE_COLORS.accent,
+        "&:hover": {
+          outline: `1px solid ${userColorMode === "dark" ? DARK_MODE_COLORS.accent : LIGHT_MODE_COLORS.accent}`,
+        },
+        cursor: "pointer",
       }}
+      onClick={() => handleSelectConversion(label)}
     >
       {label}
     </Box>
