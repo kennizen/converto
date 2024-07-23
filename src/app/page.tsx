@@ -1,6 +1,7 @@
 "use client";
 
 import ConversionSelector from "@/components/ConversionSelector";
+import ConversionViewer from "@/components/ConversionViewer";
 import Header from "@/components/Header";
 import { SupportedConversions } from "@/constants/SupportedConversions";
 import { Stack } from "@mui/material";
@@ -8,11 +9,11 @@ import { useCallback, useState } from "react";
 
 export default function Home() {
   // states
-  const [selectedConversion, setSelectedConversion] = useState<SupportedConversions | null>(null);
+  const [selectedConversion, setSelectedConversion] = useState<{ selected: SupportedConversions } | null>(null);
 
   // methods
   const handleSelectConversion = useCallback((conversion: SupportedConversions) => {
-    setSelectedConversion(conversion);
+    setSelectedConversion({ selected: conversion });
   }, []);
 
   return (
@@ -22,9 +23,10 @@ export default function Home() {
       }}
       alignItems="center"
     >
-      <Stack flex={1} sx={{ width: "80%" }} gap="3rem">
+      <Stack flex={1} sx={{ width: "80%", paddingBottom: "1rem" }} gap="3rem">
         <Header />
         <ConversionSelector selectedConversion={selectedConversion} handleSelectConversion={handleSelectConversion} />
+        <ConversionViewer />
       </Stack>
     </Stack>
   );

@@ -17,6 +17,7 @@
     "@remixicon/react": "^4.2.0",
     "next": "14.2.5",
     "react": "^18",
+    "react-ace": "^12.0.0",
     "react-dom": "^18"
   },
   "devDependencies": {

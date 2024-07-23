@@ -11,7 +11,7 @@ const INPUT_WIDTH = "600px";
 
 interface IProps {
   handleSelectConversion: (conversion: SupportedConversions) => void;
-  selectedConversion: SupportedConversions | null;
+  selectedConversion: { selected: SupportedConversions } | null;
 }
 
 const ConversionSelector = ({ handleSelectConversion, selectedConversion }: IProps) => {
@@ -32,7 +32,7 @@ const ConversionSelector = ({ handleSelectConversion, selectedConversion }: IPro
   );
 
   // methods
-  function handleClick(event: React.MouseEvent<HTMLElement>) {
+  function handleClick(_: React.MouseEvent<HTMLElement>) {
     setOpenSuggestions(true);
     setAnchorEl(inputRef.current);
   }
@@ -49,7 +49,7 @@ const ConversionSelector = ({ handleSelectConversion, selectedConversion }: IPro
 
   useEffect(() => {
     if (selectedConversion === null) return;
-    setSearchVal(selectedConversion);
+    setSearchVal(selectedConversion.selected);
     handleCloseSuggestions();
   }, [selectedConversion]);
 
@@ -92,7 +92,7 @@ const ConversionSelector = ({ handleSelectConversion, selectedConversion }: IPro
             open={openSuggestions}
             anchorEl={anchorEl}
             transition
-            sx={{ top: "15px !important" }}
+            sx={{ top: "15px !important", zIndex: 10 }}
           >
             {({ TransitionProps }) => (
               <Fade {...TransitionProps}>
