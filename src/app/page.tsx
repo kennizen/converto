@@ -1,7 +1,7 @@
 "use client";
 
 import ConversionSelector from "@/components/ConversionSelector";
-import ConversionViewer from "@/components/ConversionViewer";
+import ConversionViewer from "@/components/conversionViewer/ConversionViewer";
 import Header from "@/components/Header";
 import { SupportedConversions } from "@/constants/SupportedConversions";
 import { Stack } from "@mui/material";

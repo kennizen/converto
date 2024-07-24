@@ -2,8 +2,8 @@
 
 import { SupportedConversions, supportedConversions } from "@/constants/SupportedConversions";
 import { DARK_MODE_COLORS, LIGHT_MODE_COLORS, useColorModeCtx } from "@/providers/Theme";
-import { Box, ClickAwayListener, Fade, Popper, Stack, Typography } from "@mui/material";
-import { RiSearchLine } from "@remixicon/react";
+import { Box, ClickAwayListener, Fade, IconButton, Popper, Stack, Typography } from "@mui/material";
+import { RiCloseLine, RiSearchLine } from "@remixicon/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import CustomChip from "./CustomChip";
 
@@ -23,6 +23,7 @@ const ConversionSelector = ({ handleSelectConversion, selectedConversion }: IPro
 
   // hooks
   const { userColorMode } = useColorModeCtx();
+  const inputParentRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   // consts
@@ -34,7 +35,7 @@ const ConversionSelector = ({ handleSelectConversion, selectedConversion }: IPro
   // methods
   function handleClick(_: React.MouseEvent<HTMLElement>) {
     setOpenSuggestions(true);
-    setAnchorEl(inputRef.current);
+    setAnchorEl(inputParentRef.current);
   }
 
   function handleCloseSuggestions() {
@@ -59,7 +60,7 @@ const ConversionSelector = ({ handleSelectConversion, selectedConversion }: IPro
     <Stack direction="row" alignItems="center" justifyContent="center">
       <ClickAwayListener onClickAway={handleCloseSuggestions}>
         <Stack
-          ref={inputRef}
+          ref={inputParentRef}
           direction="row"
           alignItems="center"
           sx={{
@@ -69,10 +70,12 @@ const ConversionSelector = ({ handleSelectConversion, selectedConversion }: IPro
             borderRadius: "15px",
             padding: "0.4rem 1rem 0.4rem 0.5rem",
             gap: "0.2rem",
+            height: "35px",
           }}
         >
           <RiSearchLine size={20} style={{ flexShrink: 0 }} />
           <input
+            ref={inputRef}
             onChange={(e) => setSearchVal(e.target.value)}
             value={searchVal}
             style={{
@@ -85,8 +88,23 @@ const ConversionSelector = ({ handleSelectConversion, selectedConversion }: IPro
               color: userColorMode === "dark" ? DARK_MODE_COLORS.text : LIGHT_MODE_COLORS.text,
             }}
             placeholder="Search Conversions..."
-            onClick={handleClick}
+            onClick={(e) => {
+              handleClick(e);
+              //@ts-ignore
+              if (searchVal.trim() !== "") e.target.select();
+            }}
           />
+          {searchVal.trim() !== "" && (
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                setSearchVal("");
+                inputRef.current?.click();
+              }}
+            >
+              <RiCloseLine size={12} style={{ flexShrink: 0 }} />
+            </IconButton>
+          )}
           <Popper
             id="suggestions"
             open={openSuggestions}
