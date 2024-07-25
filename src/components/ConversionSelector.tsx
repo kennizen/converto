@@ -6,15 +6,11 @@ import { Box, ClickAwayListener, Fade, IconButton, Popper, Stack, Typography } f
 import { RiCloseLine, RiSearchLine } from "@remixicon/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import CustomChip from "./CustomChip";
+import { useSelectedConversionCtx } from "@/app/page";
 
 const INPUT_WIDTH = "600px";
 
-interface IProps {
-  handleSelectConversion: (conversion: SupportedConversions) => void;
-  selectedConversion: { selected: SupportedConversions } | null;
-}
-
-const ConversionSelector = ({ handleSelectConversion, selectedConversion }: IProps) => {
+const ConversionSelector = () => {
   // states
   const [openSuggestions, setOpenSuggestions] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -25,6 +21,7 @@ const ConversionSelector = ({ handleSelectConversion, selectedConversion }: IPro
   const { userColorMode } = useColorModeCtx();
   const inputParentRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const { handleSelectConversion, selectedConversion } = useSelectedConversionCtx();
 
   // consts
   const filteredChips = useMemo(
