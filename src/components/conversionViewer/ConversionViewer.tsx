@@ -4,6 +4,8 @@ import { Stack } from "@mui/material";
 import InputViewer from "./InputViewer";
 import OutputViewer from "./OutputViewer";
 import { useEffect, useState } from "react";
+import { getConvertedOrParsedData } from "@/utils/conversion.helpers";
+import { useSelectedConversionCtx } from "@/app/page";
 
 export type Value = {
   inputValue: string;
@@ -17,14 +19,27 @@ const ConversionViewer = () => {
     outputValue: "",
   });
 
-  function handleConversion() {
+  // hooks
+  const { selectedConversion } = useSelectedConversionCtx();
+
+  async function handleConversion() {
     if (value.inputValue.trim() === "") return;
+    if (selectedConversion === null) return;
+
+    const data = await getConvertedOrParsedData(value.inputValue, selectedConversion.selected);
+
+    if (!data) {
+      console.error("Error parsing or converting data");
+      return;
+    }
+
+    setValue((prev) => ({ ...prev, outputValue: data }));
   }
 
   // effect
   useEffect(() => {
     handleConversion();
-  }, [value.inputValue]);
+  }, [value.inputValue, selectedConversion]);
 
   console.log(value);
 

@@ -12,7 +12,7 @@ const Header = () => {
     <Stack direction="row" justifyContent="space-between" gap="1rem">
       <Stack gap="0.2rem" paddingTop="3rem">
         <Typography variant="h3">Welcome to Converto</Typography>
-        <Typography variant="h6">By developer for developers</Typography>
+        <Typography variant="body1">By developer for developers, convert or parse <br/> from one format to another.</Typography>
       </Stack>
       <Stack direction="row" alignItems="center" gap="0.3rem">
         <IconButton title="system preference" size="large" onClick={() => handleChangeColorMode("system")}>

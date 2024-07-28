@@ -24,7 +24,7 @@ const CustomChip = ({ label, handleSelectConversion }: IProps) => {
         },
         cursor: "pointer",
       }}
-      onClick={() => handleSelectConversion(label)}
+      onClick={() => handleSelectConversion(label as SupportedConversions)}
     >
       {label}
     </Box>

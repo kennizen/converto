@@ -15,7 +15,7 @@ const ConversionSelector = () => {
   const [openSuggestions, setOpenSuggestions] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [chips, setChips] = useState<SupportedConversions[]>([]);
-  const [searchVal, setSearchVal] = useState<SupportedConversions>("");
+  const [searchVal, setSearchVal] = useState<SupportedConversions | "">("");
 
   // hooks
   const { userColorMode } = useColorModeCtx();
@@ -73,7 +73,7 @@ const ConversionSelector = () => {
           <RiSearchLine size={20} style={{ flexShrink: 0 }} />
           <input
             ref={inputRef}
-            onChange={(e) => setSearchVal(e.target.value)}
+            onChange={(e) => setSearchVal(e.target.value as SupportedConversions)}
             value={searchVal}
             style={{
               flex: 1,

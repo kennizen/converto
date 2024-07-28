@@ -36,7 +36,7 @@ export default function Home() {
       }}
       alignItems="center"
     >
-      <Stack flex={1} sx={{ width: "80%", paddingBottom: "1rem" }} gap="3rem">
+      <Stack flex={1} sx={{ width: "80%", paddingBottom: "1.5rem" }} gap="2.5rem">
         <Header />
         <selectedConversionCtx.Provider value={{ selectedConversion, handleSelectConversion }}>
           <ConversionSelector />
