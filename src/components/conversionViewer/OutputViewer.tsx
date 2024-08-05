@@ -1,6 +1,5 @@
 "use client";
 import AceEditor from "react-ace";
-
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-one_dark";
 import "ace-builds/src-noconflict/ext-language_tools";
@@ -15,8 +14,10 @@ import {
 } from "@remixicon/react";
 import { DARK_MODE_COLORS, LIGHT_MODE_COLORS, useColorModeCtx } from "@/providers/Theme";
 import { useSelectedConversionCtx } from "@/app/page";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import FullscreenViewer from "./FullscreenViewer";
+import { Value } from "./ConversionViewer";
+import { formatJSON } from "@/utils/formatters";
 
 type EditorConfig = {
   fontSize: number;
@@ -25,16 +26,17 @@ type EditorConfig = {
 
 interface IProps {
   outputValue: string;
+  setValue: Dispatch<SetStateAction<Value>>;
 }
 
 const FONT_SIZE_UPPER_LIMIT = 46,
   FONT_SIZE_LOWER_LIMIT = 6;
 
-const OutputViewer = ({ outputValue }: IProps) => {
+const OutputViewer = ({ outputValue, setValue }: IProps) => {
   // states
   const [editorConfig, setEditorConfig] = useState<EditorConfig>({
     fontSize: 14,
-    wrap: false,
+    wrap: true,
   });
   const [fullscreen, setFullscreen] = useState(false);
 
@@ -58,6 +60,16 @@ const OutputViewer = ({ outputValue }: IProps) => {
     navigator.clipboard.writeText(outputValue);
   }
 
+  async function beautify() {
+    switch (selectedConversion?.selected) {
+      case "base64 to json":
+        setValue((prev) => ({ ...prev, outputValue: formatJSON(outputValue!) }));
+        break;
+      default:
+        break;
+    }
+  }
+
   return (
     <Stack sx={{ flex: 1 }} gap="0.5rem">
       <Stack direction="row" alignItems="center" justifyContent="space-between" gap="1rem">
@@ -79,7 +91,7 @@ const OutputViewer = ({ outputValue }: IProps) => {
           <IconButton title="wrap text" onClick={() => handleToggleWrap()}>
             <RiTextWrap size={20} />
           </IconButton>
-          <IconButton title="beautify">
+          <IconButton title="beautify" onClick={beautify}>
             <RiSparklingLine size={20} />
           </IconButton>
           <IconButton title="Download to file">

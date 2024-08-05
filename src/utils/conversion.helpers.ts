@@ -1,5 +1,5 @@
 import { SupportedConversions } from "@/constants/SupportedConversions";
-import { intoResult } from "@/hof/results";
+import { intoResult, Result } from "@/hof/results";
 import { jsonthrow } from "jsonthrow";
 
 export async function getConvertedOrParsedData(input: string, type: SupportedConversions) {

@@ -36,7 +36,7 @@ const InputViewer = ({ inputValue, setValue }: IProps) => {
   // states
   const [editorConfig, setEditorConfig] = useState<EditorConfig>({
     fontSize: 14,
-    wrap: false,
+    wrap: true,
   });
   const [fullscreen, setFullscreen] = useState(false);
 

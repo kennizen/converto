@@ -46,7 +46,7 @@ const ConversionViewer = () => {
   return (
     <Stack direction="row" gap="5rem" justifyContent="space-between" flex={1}>
       <InputViewer inputValue={value.inputValue} setValue={setValue} />
-      <OutputViewer outputValue={value.outputValue} />
+      <OutputViewer outputValue={value.outputValue} setValue={setValue} />
     </Stack>
   );
 };
