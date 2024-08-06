@@ -51,7 +51,8 @@ const ConversionSelector = () => {
     handleCloseSuggestions();
   }, [selectedConversion]);
 
-  console.log({ searchVal, filteredChips });
+  console.log("search val", searchVal);
+  console.log("filteredChips", filteredChips);
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="center">
@@ -94,7 +95,7 @@ const ConversionSelector = () => {
           {searchVal.trim() !== "" && (
             <IconButton
               size="small"
-              onClick={(e) => {
+              onClick={() => {
                 setSearchVal("");
                 inputRef.current?.click();
               }}

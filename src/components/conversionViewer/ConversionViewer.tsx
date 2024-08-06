@@ -39,7 +39,12 @@ const ConversionViewer = () => {
   // effect
   useEffect(() => {
     handleConversion();
-  }, [value.inputValue, selectedConversion]);
+  }, [value.inputValue]);
+
+  useEffect(() => {
+    if (selectedConversion === null) return;
+    setValue({ inputValue: "", outputValue: "" });
+  }, [selectedConversion]);
 
   console.log(value);
 

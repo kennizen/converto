@@ -1,3 +1,5 @@
+"use client";
+
 import { SupportedConversions } from "@/constants/SupportedConversions";
 import { DARK_MODE_COLORS, LIGHT_MODE_COLORS, useColorModeCtx } from "@/providers/Theme";
 import { Box } from "@mui/material";

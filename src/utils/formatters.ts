@@ -1,12 +1,7 @@
-import { jsonthrow } from "jsonthrow";
+import { js_beautify } from "js-beautify";
 
-export function formatJSON(str: string) {
-  const [obj, err1] = jsonthrow.parse<any>(str);
-
-  if (err1) {
-    console.error("Error parsing JSON");
-    return "";
-  }
-
-  return jsonthrow.stringify(obj, null, 2)[0]!;
+export function format(str: string) {
+  return js_beautify(str, {
+    indent_size: 2,
+  });
 }

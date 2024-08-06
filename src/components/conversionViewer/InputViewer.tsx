@@ -1,4 +1,5 @@
 "use client";
+
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-one_dark";
@@ -15,9 +16,10 @@ import {
 } from "@remixicon/react";
 import { DARK_MODE_COLORS, LIGHT_MODE_COLORS, useColorModeCtx } from "@/providers/Theme";
 import { useSelectedConversionCtx } from "@/app/page";
-import { Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 import { Value } from "./ConversionViewer";
 import FullscreenViewer from "./FullscreenViewer";
+import { format } from "@/utils/formatters";
 
 type EditorConfig = {
   fontSize: number;
@@ -43,6 +45,7 @@ const InputViewer = ({ inputValue, setValue }: IProps) => {
   // hooks
   const { userColorMode } = useColorModeCtx();
   const { selectedConversion } = useSelectedConversionCtx();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // methods
   function handleChangeFontSize(size: EditorConfig["fontSize"]) {
@@ -58,6 +61,26 @@ const InputViewer = ({ inputValue, setValue }: IProps) => {
 
   function handleCopy() {
     navigator.clipboard.writeText(inputValue);
+  }
+
+  function beautify() {
+    setValue((prev) => ({ ...prev, inputValue: format(inputValue!) }));
+  }
+
+  function handleUploadFromFile(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files![0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        const content = e.target?.result as string;
+        setValue((prev) => ({ ...prev, inputValue: content }));
+        fileInputRef.current!.value = "";
+      };
+
+      reader.readAsText(file);
+    }
   }
 
   console.log("input value", inputValue);
@@ -83,13 +106,13 @@ const InputViewer = ({ inputValue, setValue }: IProps) => {
           <IconButton title="wrap text" onClick={() => handleToggleWrap()}>
             <RiTextWrap size={20} />
           </IconButton>
-          <IconButton title="beautify">
+          <IconButton title="beautify" onClick={beautify}>
             <RiSparklingLine size={20} />
           </IconButton>
           <IconButton title="Get from url">
             <RiLink size={20} />
           </IconButton>
-          <IconButton title="Upload from file">
+          <IconButton title="Upload from file" onClick={() => fileInputRef.current?.click()}>
             <RiFileUploadLine size={20} />
           </IconButton>
           <IconButton title="Copy to clipboard" onClick={handleCopy}>
@@ -131,6 +154,13 @@ const InputViewer = ({ inputValue, setValue }: IProps) => {
         fontSize={editorConfig.fontSize}
         wrap={editorConfig.wrap}
         value={inputValue}
+      />
+      <input
+        type="file"
+        hidden
+        ref={fileInputRef}
+        onChange={handleUploadFromFile}
+        accept={`.${selectedConversion?.selected.split("to")[0].trim()}`}
       />
     </Stack>
   );

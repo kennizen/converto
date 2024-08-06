@@ -1,4 +1,5 @@
 "use client";
+
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-one_dark";
@@ -17,7 +18,7 @@ import { useSelectedConversionCtx } from "@/app/page";
 import { Dispatch, SetStateAction, useState } from "react";
 import FullscreenViewer from "./FullscreenViewer";
 import { Value } from "./ConversionViewer";
-import { formatJSON } from "@/utils/formatters";
+import { format } from "@/utils/formatters";
 
 type EditorConfig = {
   fontSize: number;
@@ -60,14 +61,22 @@ const OutputViewer = ({ outputValue, setValue }: IProps) => {
     navigator.clipboard.writeText(outputValue);
   }
 
-  async function beautify() {
-    switch (selectedConversion?.selected) {
-      case "base64 to json":
-        setValue((prev) => ({ ...prev, outputValue: formatJSON(outputValue!) }));
-        break;
-      default:
-        break;
-    }
+  function beautify() {
+    setValue((prev) => ({ ...prev, outputValue: format(outputValue!) }));
+  }
+
+  function handleFileDownload() {
+    if (outputValue.trim() === "") return;
+
+    const blob = new Blob([outputValue]);
+    const link = document.createElement("a");
+
+    link.download = `data.${selectedConversion?.selected.split("to")[1].trim()}`;
+    link.href = window.URL.createObjectURL(blob);
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   return (
@@ -94,7 +103,7 @@ const OutputViewer = ({ outputValue, setValue }: IProps) => {
           <IconButton title="beautify" onClick={beautify}>
             <RiSparklingLine size={20} />
           </IconButton>
-          <IconButton title="Download to file">
+          <IconButton title="Download to file" onClick={handleFileDownload}>
             <RiFileDownloadLine size={20} />
           </IconButton>
           <IconButton title="Copy to clipboard" onClick={handleCopy}>
